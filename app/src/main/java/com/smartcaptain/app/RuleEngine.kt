@@ -2,10 +2,10 @@ package com.smartcaptain.app
 
 class RuleEngine {
     fun evaluate(
-        offer: RideOffer, 
-        rules: DriverRules, 
-        masterEnabled: Boolean, 
-        emergencyStopped: Boolean, 
+        offer: RideOffer,
+        rules: DriverRules,
+        masterEnabled: Boolean,
+        emergencyStopped: Boolean,
         passActive: Boolean
     ): FilterDecision {
         val reasons = mutableListOf<String>()
