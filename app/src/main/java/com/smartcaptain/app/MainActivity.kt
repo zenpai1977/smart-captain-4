@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 startActivity(intent)
             } catch (e: Exception) {
-                Toast.makeText(this, "No UPI app found. Please scan the QR code or pay to $upiId", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "No UPI app found. Please scan QR or pay to $upiId", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -279,8 +279,18 @@ class MainActivity : AppCompatActivity() {
                     put("goTo", goTo)
                 }
                 conn.outputStream.use { it.write(payload.toString().toByteArray()) }
-                conn.responseCode
-            } catch (_: Exception) {
+                val responseCode = conn.responseCode
+
+                if (responseCode != 200) {
+                    runOnUiThread {
+                        Toast.makeText(this, "Sync Error Code: $responseCode", Toast.LENGTH_LONG).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                runOnUiThread {
+                    Toast.makeText(this, "Sync Failed: ${e.message}", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
