@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.smartcaptain.app"
+    namespace = "com.example.smartcaptain"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.smartcaptain.app"
+        applicationId = "com.example.smartcaptain"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
