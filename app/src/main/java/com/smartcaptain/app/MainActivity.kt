@@ -4,11 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -40,9 +38,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        ensureAdminEntriesInitialized()
         applyExactWebStyling()
-        setupTabs()
         setupPlanSpinner()
         setupButtons()
         loadSavedRulesIntoUi()
@@ -72,34 +68,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.inputGoTo).background = cardBorder("#0D1117", "#238636")
-    }
-
-    private fun setupTabs() {
-        val btnDriver = findViewById<Button>(R.id.btnTabDriver)
-        val btnAdmin = findViewById<Button>(R.id.btnTabAdmin)
-        val driverView = findViewById<View>(R.id.driverDashboardContainer)
-        val adminView = findViewById<View>(R.id.adminPanelContainer)
-
-        btnDriver.setOnClickListener {
-            driverView.visibility = View.VISIBLE
-            adminView.visibility = View.GONE
-            btnDriver.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#1F6FEB"))
-            btnAdmin.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#21262D"))
-            refreshPassStatus()
-        }
-
-        btnAdmin.setOnClickListener {
-            driverView.visibility = View.GONE
-            adminView.visibility = View.VISIBLE
-            btnAdmin.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#1F6FEB"))
-            btnDriver.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#21262D"))
-            renderAdminTable()
-        }
-
-        findViewById<Button>(R.id.btnRefreshAdmin).setOnClickListener {
-            renderAdminTable()
-            Toast.makeText(this, "Admin list refreshed", Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun setupPlanSpinner() {
@@ -204,14 +172,14 @@ class MainActivity : AppCompatActivity() {
                 .putString("phone", phone)
                 .apply()
 
-            saveSubmissionRecord(phone, selectedPlanLabel, utr)
+            saveLocalSubmissionRecord(phone, selectedPlanLabel, utr)
             syncWithCloudBackend(phone, selectedPlanLabel, utr, minTrip, maxPickup, minFare, goTo)
 
             val txtStatus = findViewById<TextView>(R.id.txtCloudStatus)
             txtStatus.text = "Rules Saved! UTR $utr submitted (Pending Admin Approval)"
             txtStatus.setTextColor(Color.parseColor("#D29922"))
 
-            Toast.makeText(this, "Submitted! Approve it in the Admin Panel tab.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Submitted for verification!", Toast.LENGTH_LONG).show()
         }
 
         btnStatus.setOnClickListener {
@@ -259,40 +227,13 @@ class MainActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.inputPhone).setText(prefs.getString("phone", "9656896787"))
     }
 
-    private fun ensureAdminEntriesInitialized() {
-        val prefs = getSharedPreferences("smart_captain_prefs", Context.MODE_PRIVATE)
-        val raw = prefs.getString("admin_records", null)
-        if (raw == null) {
-            val arr = JSONArray()
-            arr.put(JSONObject().apply {
-                put("phone", "4567654345")
-                put("plan", "1 Day Pass (₹9)")
-                put("utr", "876545654343")
-                put("status", "Active")
-            })
-            arr.put(JSONObject().apply {
-                put("phone", "5654586787")
-                put("plan", "1 Day Pass (₹9)")
-                put("utr", "665653564656")
-                put("status", "Active")
-            })
-            arr.put(JSONObject().apply {
-                put("phone", "9656896787")
-                put("plan", "1 Day Pass (₹9)")
-                put("utr", "986579967985")
-                put("status", "Active")
-            })
-            prefs.edit().putString("admin_records", arr.toString()).apply()
-        }
-    }
-
     private fun getSubmissionsArray(): JSONArray {
         val prefs = getSharedPreferences("smart_captain_prefs", Context.MODE_PRIVATE)
         val raw = prefs.getString("admin_records", "[]") ?: "[]"
         return JSONArray(raw)
     }
 
-    private fun saveSubmissionRecord(phone: String, plan: String, utr: String) {
+    private fun saveLocalSubmissionRecord(phone: String, plan: String, utr: String) {
         val prefs = getSharedPreferences("smart_captain_prefs", Context.MODE_PRIVATE)
         val arr = getSubmissionsArray()
         val updated = JSONArray()
@@ -315,98 +256,12 @@ class MainActivity : AppCompatActivity() {
         prefs.edit().putString("admin_records", updated.toString()).apply()
     }
 
-    private fun approveRecordAt(index: Int) {
-        val prefs = getSharedPreferences("smart_captain_prefs", Context.MODE_PRIVATE)
-        val arr = getSubmissionsArray()
-        if (index in 0 until arr.length()) {
-            val obj = arr.getJSONObject(index)
-            obj.put("status", "Active")
-            prefs.edit().putString("admin_records", arr.toString()).apply()
-            renderAdminTable()
-            Toast.makeText(this, "Approved ${obj.getString("phone")}!", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun renderAdminTable() {
-        val container = findViewById<LinearLayout>(R.id.tableAdminRows)
-        container.removeAllViews()
-
-        val headerRow = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            setBackgroundColor(Color.parseColor("#21262D"))
-            setPadding(12, 16, 12, 16)
-        }
-        headerRow.addView(makeTableCell("Phone", 260, "#8B949E", true))
-        headerRow.addView(makeTableCell("Plan", 310, "#8B949E", true))
-        headerRow.addView(makeTableCell("UTR Number", 300, "#8B949E", true))
-        headerRow.addView(makeTableCell("Status", 180, "#8B949E", true))
-        headerRow.addView(makeTableCell("Action", 240, "#8B949E", true))
-        container.addView(headerRow)
-
-        val arr = getSubmissionsArray()
-        for (i in 0 until arr.length()) {
-            val obj = arr.getJSONObject(i)
-            val phone = obj.getString("phone")
-            val plan = obj.getString("plan")
-            val utr = obj.getString("utr")
-            val status = obj.getString("status")
-
-            val row = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = Gravity.CENTER_VERTICAL
-                setBackgroundColor(Color.parseColor("#0D1117"))
-                setPadding(12, 18, 12, 18)
-            }
-
-            row.addView(makeTableCell(phone, 260, "#C9D1D9", false))
-            row.addView(makeTableCell(plan, 310, "#C9D1D9", false))
-            row.addView(makeTableCell(utr, 300, "#C9D1D9", false))
-
-            val statusColor = if (status == "Active") "#3FB950" else "#D29922"
-            row.addView(makeTableCell(status, 180, statusColor, true))
-
-            if (status == "Active") {
-                row.addView(makeTableCell("Approved", 240, "#C9D1D9", false))
-            } else {
-                val approveBtn = Button(this).apply {
-                    text = "Approve"
-                    textSize = 11f
-                    isAllCaps = false
-                    setTextColor(Color.WHITE)
-                    backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#238636"))
-                    layoutParams = LinearLayout.LayoutParams(220, 95)
-                    setOnClickListener { approveRecordAt(i) }
-                }
-                row.addView(approveBtn)
-            }
-
-            container.addView(row)
-
-            val divider = View(this).apply {
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2)
-                setBackgroundColor(Color.parseColor("#21262D"))
-            }
-            container.addView(divider)
-        }
-    }
-
-    private fun makeTableCell(textStr: String, widthPx: Int, hexColor: String, bold: Boolean): TextView {
-        return TextView(this).apply {
-            text = textStr
-            textSize = 12f
-            setTextColor(Color.parseColor(hexColor))
-            if (bold) setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(widthPx, ViewGroup.LayoutParams.WRAP_CONTENT)
-        }
-    }
-
     private fun syncWithCloudBackend(
         phone: String, plan: String, utr: String,
         minTrip: String, maxPickup: String, minFare: String, goTo: String
     ) {
         thread {
             try {
-                // Corrected backend activation endpoint for Supabase integration
                 val url = URL("$backendBaseUrl/api/activate")
                 val conn = (url.openConnection() as HttpURLConnection).apply {
                     requestMethod = "POST"
