@@ -22,7 +22,8 @@ import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
-    private val upiId = "kkumar221@okhdfcbank"
+    // Your exact GPay UPI ID
+    private val upiId = "kkumae221@okhdfcbank"
     private val backendBaseUrl = "https://smart-captain.onrender.com"
 
     private val planNames = arrayOf(
