@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Enable CORS for external requests
+// Enable CORS for external requests and admin panels
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -104,30 +104,34 @@ app.get('/admin', async (req, res) => {
     `);
 });
 
-// 2. Endpoint called by Android app when driver submits UTR & rules
+// 2. Activation Endpoint called by Android app
 app.post('/api/activate', async (req, res) => {
     try {
-        const { phone, plan, utr, minTrip, maxPickup, minFare, goTo } = req.body;
+        const { phone, plan, utr } = req.body;
         
+        if (!phone || !utr) {
+            return res.status(400).json({ success: false, error: 'Missing required fields: phone or utr' });
+        }
+
         const { data, error } = await supabase
             .from('drivers')
             .upsert([
                 {
                     phone,
-                    plan,
+                    plan: plan || '1 Day Pass (₹9)',
                     utr,
-                    status: 'Pending',
-                    min_trip: minTrip,
-                    max_pickup: maxPickup,
-                    min_fare: minFare,
-                    go_to: goTo
+                    status: 'Pending'
                 }
             ], { onConflict: ['phone'] });
 
-        if (error) throw error;
-        res.status(200).json({ success: true, message: 'Activation request submitted successfully' });
+        if (error) {
+            console.error('Supabase Error:', error);
+            return res.status(500).json({ success: false, error: error.message });
+        }
+
+        res.status(200).json({ success: true, message: 'Activation request saved securely in database' });
     } catch (err) {
-        console.error(err);
+        console.error('Server Exception:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 });
