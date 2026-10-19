@@ -21,13 +21,13 @@ data class RideOffer(
 )
 
 data class FilterDecision(
-    val matchesRules: Boolean, 
+    val matchesRules: Boolean,
     val reasons: List<String>
 )
 
 data class DriverStatusResponse(
-    val phone: String, 
-    val passActive: Boolean, 
-    val statusText: String, 
+    val phone: String,
+    val passActive: Boolean,
+    val statusText: String,
     val rules: DriverRules
 )
