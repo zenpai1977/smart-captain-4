@@ -297,7 +297,6 @@ class MainActivity : AppCompatActivity() {
         val arr = getSubmissionsArray()
         val updated = JSONArray()
         
-        // Always insert new submission right at index 0 so it appears at top of admin panel
         val newObj = JSONObject().apply {
             put("phone", phone)
             put("plan", plan)
@@ -306,7 +305,6 @@ class MainActivity : AppCompatActivity() {
         }
         updated.put(newObj)
 
-        // Append existing records avoiding exact duplicates
         for (i in 0 until arr.length()) {
             val obj = arr.getJSONObject(i)
             if (obj.getString("utr") != utr) {
@@ -408,7 +406,8 @@ class MainActivity : AppCompatActivity() {
     ) {
         thread {
             try {
-                val url = URL("$backendBaseUrl/api/submit")
+                // Corrected backend activation endpoint for Supabase integration
+                val url = URL("$backendBaseUrl/api/activate")
                 val conn = (url.openConnection() as HttpURLConnection).apply {
                     requestMethod = "POST"
                     setRequestProperty("Content-Type", "application/json")
