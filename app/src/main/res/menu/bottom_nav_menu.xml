@@ -14,7 +14,7 @@
         android:title="Activity" />
     <item
         android:id="@+id/nav_account"
-        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:icon="@android:drawable/ic_menu_myplaces"
         android:title="Account" />
     <item
         android:id="@+id/nav_checks"
