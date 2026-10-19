@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        seedDefaultAdminEntriesIfNeeded()
+        ensureAdminEntriesInitialized()
         applyExactWebStyling()
         setupTabs()
         setupPlanSpinner()
@@ -259,9 +259,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.inputPhone).setText(prefs.getString("phone", "9656896787"))
     }
 
-    private fun seedDefaultAdminEntriesIfNeeded() {
+    private fun ensureAdminEntriesInitialized() {
         val prefs = getSharedPreferences("smart_captain_prefs", Context.MODE_PRIVATE)
-        if (!prefs.contains("admin_records")) {
+        val raw = prefs.getString("admin_records", null)
+        if (raw == null) {
             val arr = JSONArray()
             arr.put(JSONObject().apply {
                 put("phone", "4567654345")
@@ -295,32 +296,22 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("smart_captain_prefs", Context.MODE_PRIVATE)
         val arr = getSubmissionsArray()
         val updated = JSONArray()
-        var exists = false
+        
+        // Always insert new submission right at index 0 so it appears at top of admin panel
+        val newObj = JSONObject().apply {
+            put("phone", phone)
+            put("plan", plan)
+            put("utr", utr)
+            put("status", "Pending")
+        }
+        updated.put(newObj)
 
+        // Append existing records avoiding exact duplicates
         for (i in 0 until arr.length()) {
             val obj = arr.getJSONObject(i)
-            if (obj.getString("phone") == phone && obj.getString("utr") == utr) {
-                obj.put("plan", plan)
-                obj.put("status", "Pending")
-                exists = true
+            if (obj.getString("utr") != utr) {
+                updated.put(obj)
             }
-            updated.put(obj)
-        }
-
-        if (!exists) {
-            val newObj = JSONObject().apply {
-                put("phone", phone)
-                put("plan", plan)
-                put("utr", utr)
-                put("status", "Pending")
-            }
-            val freshArr = JSONArray()
-            freshArr.put(newObj)
-            for (i in 0 until updated.length()) {
-                freshArr.put(updated.getJSONObject(i))
-            }
-            prefs.edit().putString("admin_records", freshArr.toString()).apply()
-            return
         }
 
         prefs.edit().putString("admin_records", updated.toString()).apply()
