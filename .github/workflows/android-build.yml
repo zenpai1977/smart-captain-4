@@ -19,33 +19,15 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
-      - name: Prepare Logo and Build APK
+      - name: Generate Gradle Wrapper & Build APK
         run: |
           mkdir -p app/src/main/res/drawable
           
-          # Install Pillow for image resizing
-          pip install Pillow >/dev/null 2>&1 || true
+          # Automatically generate the missing wrapper files
+          gradle wrapper --gradle-version 8.5
+          chmod +x gradlew
 
-          LOGO_FILE=$(find . -maxdepth 1 -type f -iname "*.png" | head -n 1)
-
-          if [ -n "$LOGO_FILE" ]; then
-            echo "Found logo: $LOGO_FILE"
-            python3 -c "
-          from PIL import Image
-          try:
-              img = Image.open('$LOGO_FILE').convert('RGBA')
-              img = img.resize((256, 256), Image.Resampling.LANCZOS)
-              img.save('app/src/main/res/drawable/app_logo.png', 'PNG')
-          except Exception as e:
-              print('Resize error:', e)
-          " || cp "$LOGO_FILE" app/src/main/res/drawable/app_logo.png
-          else
-            echo "No logo found, skipping custom icon."
-          fi
-
+          # Build the debug APK
           ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK Artifact
