@@ -71,7 +71,6 @@ class MainActivity : AppCompatActivity() {
             findViewById<View>(id).background = cardBorder("#0D1117", "#30363D")
         }
 
-        // Green border on "Go To" input matching the website
         findViewById<View>(R.id.inputGoTo).background = cardBorder("#0D1117", "#238636")
     }
 
@@ -160,7 +159,6 @@ class MainActivity : AppCompatActivity() {
         val btnSave = findViewById<Button>(R.id.btnSaveRules)
         val btnStatus = findViewById<Button>(R.id.btnCheckStatus)
 
-        // 1. Tap to Pay on GPay / UPI App
         btnPay.setOnClickListener {
             val uri = Uri.parse("upi://pay").buildUpon()
                 .appendQueryParameter("pa", upiId)
@@ -177,7 +175,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 2. Save Rules & Submit for Verification
         btnSave.setOnClickListener {
             val phone = findViewById<EditText>(R.id.inputPhone).text.toString().trim()
             val utr = findViewById<EditText>(R.id.inputUtr).text.toString().trim()
@@ -197,7 +194,6 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Save rules locally
             val prefs = getSharedPreferences("smart_captain_prefs", Context.MODE_PRIVATE)
             prefs.edit()
                 .putBoolean("switchOn", switchOn)
@@ -208,7 +204,6 @@ class MainActivity : AppCompatActivity() {
                 .putString("phone", phone)
                 .apply()
 
-            // Save payment submission to Admin Panel list & Cloud
             saveSubmissionRecord(phone, selectedPlanLabel, utr)
             syncWithCloudBackend(phone, selectedPlanLabel, utr, minTrip, maxPickup, minFare, goTo)
 
@@ -219,7 +214,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Submitted! Approve it in the Admin Panel tab.", Toast.LENGTH_LONG).show()
         }
 
-        // 3. Check My Pass Status
         btnStatus.setOnClickListener {
             refreshPassStatus()
         }
@@ -264,8 +258,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.inputGoTo).setText(prefs.getString("goTo", ""))
         findViewById<EditText>(R.id.inputPhone).setText(prefs.getString("phone", "9656896787"))
     }
-
-    // ================= ADMIN PANEL LOGIC =================
 
     private fun seedDefaultAdminEntriesIfNeeded() {
         val prefs = getSharedPreferences("smart_captain_prefs", Context.MODE_PRIVATE)
@@ -343,7 +335,6 @@ class MainActivity : AppCompatActivity() {
         val container = findViewById<LinearLayout>(R.id.tableAdminRows)
         container.removeAllViews()
 
-        // Table Header Row matching screenshot 1000020387.png
         val headerRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             setBackgroundColor(Color.parseColor("#21262D"))
@@ -396,7 +387,7 @@ class MainActivity : AppCompatActivity() {
             container.addView(row)
 
             val divider = View(this).apply {
-                layoutParams = LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, 2)
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2)
                 setBackgroundColor(Color.parseColor("#21262D"))
             }
             container.addView(divider)
