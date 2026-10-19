@@ -19,9 +19,44 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Build APK with Gradle
+      - name: Prepare App Logo and Build APK
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null 2>&1 || true
+
+          mkdir -p app/src/main/res/drawable
+
+          LOGO_FILE=$(find . -maxdepth 1 -type f -iname "*.png" | head -n 1)
+
+          if [ -n "$LOGO_FILE" ]; then
+            echo "Found uploaded logo: $LOGO_FILE"
+            python3 -c "
+          from PIL import Image
+          img = Image.open('$LOGO_FILE').convert('RGBA')
+          img = img.resize((256, 256), Image.Resampling.LANCZOS)
+          img.save('app/src/main/res/drawable/app_logo.png', 'PNG')
+          " 2>/dev/null || cp "$LOGO_FILE" app/src/main/res/drawable/app_logo.png
+          else
+            cat << 'EOF' > app/src/main/res/drawable/app_logo.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="108dp"
+              android:height="108dp"
+              android:viewportWidth="108"
+              android:viewportHeight="108">
+              <path
+                  android:fillColor="#06142E"
+                  android:pathData="M20,4 L88,4 A16,16 0 0,1 104,20 L104,88 A16,16 0 0,1 88,104 L20,104 A16,16 0 0,1 4,88 L4,20 A16,16 0 0,1 20,4 Z" />
+              <path
+                  android:strokeColor="#00A8FF"
+                  android:strokeWidth="3"
+                  android:pathData="M54,40 A26,26 0 1,1 53.9,40 Z" />
+              <path
+                  android:fillColor="#D4AF37"
+                  android:pathData="M26,38 L54,20 L82,38 L74,44 L34,44 Z" />
+          </vector>
+          EOF
+          fi
+
           gradle assembleDebug --no-daemon
 
       - name: Upload APK Artifact
