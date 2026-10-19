@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Smart Captain</string>
+    <string name="app_name">SmartCaptain</string>
+    <string name="accessibility_service_description">Reads booking cards to automatically accept rides matching your saved rules.</string>
 </resources>
