@@ -22,7 +22,6 @@ import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
-    // Your exact GPay UPI ID
     private val upiId = "kkumae221@okhdfcbank"
     private val backendBaseUrl = "https://smart-captain.onrender.com"
 
@@ -296,25 +295,32 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("smart_captain_prefs", Context.MODE_PRIVATE)
         val arr = getSubmissionsArray()
         val updated = JSONArray()
-        var replaced = false
+        var exists = false
 
         for (i in 0 until arr.length()) {
             val obj = arr.getJSONObject(i)
             if (obj.getString("phone") == phone && obj.getString("utr") == utr) {
                 obj.put("plan", plan)
                 obj.put("status", "Pending")
-                replaced = true
+                exists = true
             }
             updated.put(obj)
         }
 
-        if (!replaced) {
-            updated.put(JSONObject().apply {
+        if (!exists) {
+            val newObj = JSONObject().apply {
                 put("phone", phone)
                 put("plan", plan)
                 put("utr", utr)
                 put("status", "Pending")
-            })
+            }
+            val freshArr = JSONArray()
+            freshArr.put(newObj)
+            for (i in 0 until updated.length()) {
+                freshArr.put(updated.getJSONObject(i))
+            }
+            prefs.edit().putString("admin_records", freshArr.toString()).apply()
+            return
         }
 
         prefs.edit().putString("admin_records", updated.toString()).apply()
