@@ -173,13 +173,12 @@ class MainActivity : AppCompatActivity() {
                 .apply()
 
             saveLocalSubmissionRecord(phone, selectedPlanLabel, utr)
-            syncWithCloudBackend(phone, selectedPlanLabel, utr, minTrip, maxPickup, minFare, goTo)
-
+            
             val txtStatus = findViewById<TextView>(R.id.txtCloudStatus)
-            txtStatus.text = "Rules Saved! UTR $utr submitted (Pending Admin Approval)"
-            txtStatus.setTextColor(Color.parseColor("#D29922"))
+            txtStatus.text = "Syncing with cloud database..."
+            txtStatus.setTextColor(Color.parseColor("#58A6FF"))
 
-            Toast.makeText(this, "Submitted for verification!", Toast.LENGTH_LONG).show()
+            syncWithCloudBackend(phone, selectedPlanLabel, utr, minTrip, maxPickup, minFare, goTo)
         }
 
         btnStatus.setOnClickListener {
@@ -267,8 +266,10 @@ class MainActivity : AppCompatActivity() {
                     requestMethod = "POST"
                     setRequestProperty("Content-Type", "application/json")
                     doOutput = true
-                    connectTimeout = 5000
+                    connectTimeout = 8000
+                    readTimeout = 8000
                 }
+
                 val payload = JSONObject().apply {
                     put("phone", phone)
                     put("plan", plan)
@@ -278,18 +279,38 @@ class MainActivity : AppCompatActivity() {
                     put("minFare", minFare)
                     put("goTo", goTo)
                 }
+
                 conn.outputStream.use { it.write(payload.toString().toByteArray()) }
                 val responseCode = conn.responseCode
 
-                if (responseCode != 200) {
+                if (responseCode == 200) {
                     runOnUiThread {
-                        Toast.makeText(this, "Sync Error Code: $responseCode", Toast.LENGTH_LONG).show()
+                        val txtStatus = findViewById<TextView>(R.id.txtCloudStatus)
+                        txtStatus.text = "Rules Saved! UTR $utr submitted (Pending Admin Approval)"
+                        txtStatus.setTextColor(Color.parseColor("#D29922"))
+                        Toast.makeText(this, "Submitted & synced with database successfully!", Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    val errorStreamResponse = try {
+                        conn.errorStream?.bufferedReader()?.use { it.readText() } ?: "Unknown error"
+                    } catch (e: Exception) {
+                        "Could not read error stream"
+                    }
+
+                    runOnUiThread {
+                        val txtStatus = findViewById<TextView>(R.id.txtCloudStatus)
+                        txtStatus.text = "Cloud Sync Failed (HTTP $responseCode)"
+                        txtStatus.setTextColor(Color.parseColor("#F85149"))
+                        Toast.makeText(this, "Server rejected submission: $errorStreamResponse", Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 runOnUiThread {
-                    Toast.makeText(this, "Sync Failed: ${e.message}", Toast.LENGTH_LONG).show()
+                    val txtStatus = findViewById<TextView>(R.id.txtCloudStatus)
+                    txtStatus.text = "Network Error"
+                    txtStatus.setTextColor(Color.parseColor("#F85149"))
+                    Toast.makeText(this, "Network connection error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
