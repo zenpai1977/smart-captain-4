@@ -2,147 +2,453 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D1117"
+    android:background="#0B0E14"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="14dp">
 
-        <!-- Top Banner Card -->
+        <!-- Mode Switcher: Driver Dashboard vs Admin Panel -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#161B22"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Version 6.94.1 • Supabase Cloud DB Connected"
-                android:textColor="#D29922"
-                android:textSize="11sp" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="smart captain — Apni pasand ki ride. Apne rules par."
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <Button
+                android:id="@+id/btnTabDriver"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:backgroundTint="#1F6FEB"
+                android:text="Driver Dashboard"
+                android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginTop="4dp" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Bikes/Auto rides chhoro, kamai chunoo. Rapido, Uber aur Porzo ki bookings apne rules par filter karo."
-                android:textColor="#8B949E"
                 android:textSize="12sp"
-                android:layout_marginTop="4dp" />
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnTabAdmin"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:backgroundTint="#21262D"
+                android:text="Admin Panel (Approve)"
+                android:textAllCaps="false"
+                android:textColor="#D29922"
+                android:textSize="12sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Card 1: Ride Filter Rules -->
+        <!-- ================= DRIVER DASHBOARD VIEW ================= -->
         <LinearLayout
+            android:id="@+id/driverDashboardContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#161B22"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="1. Aapke Ride Filter Rules"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
+            android:orientation="vertical">
 
+            <!-- Top Banner Card -->
             <LinearLayout
+                android:id="@+id/cardTopBanner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="14dp">
+
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Bike / Auto / Cab / Parcel Switch"
+                    android:text="Version 6.94.1 • Supabase Cloud DB Connected"
+                    android:textColor="#9E8C6C"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="smart captain — Apni pasand ki ride. Apne rules par."
                     android:textColor="#FFFFFF"
-                    android:textSize="13sp" />
-                <CheckBox
-                    android:layout_width="wrap_content"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true" />
+                    android:layout_marginTop="6dp"
+                    android:text="Ghaate wali rides chhoro, kamai wali uthao. Rapido, Uber aur Porter ki bookings apne rules par filter karo."
+                    android:textColor="#8B949E"
+                    android:textSize="12sp" />
             </LinearLayout>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Minimum Trip Doori (km)" android:textColor="#8B949E" android:textSize="12sp" />
-            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#21262D" android:textColor="#FFFFFF" android:text="5" android:padding="10dp" android:textSize="14sp" android:layout_marginBottom="10dp" />
+            <!-- Card 1: Ride Filter Rules -->
+            <LinearLayout
+                android:id="@+id/cardRules"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="14dp">
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Max Pickup Doori (0.5 - 12 km)" android:textColor="#8B949E" android:textSize="12sp" />
-            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#21262D" android:textColor="#FFFFFF" android:text="2" android:padding="10dp" android:textSize="14sp" android:layout_marginBottom="10dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1. Aapke Ride Filter Rules"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Minimum Kamai (₹ Fare)" android:textColor="#8B949E" android:textSize="12sp" />
-            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#21262D" android:textColor="#FFFFFF" android:text="60" android:padding="10dp" android:textSize="14sp" android:layout_marginBottom="10dp" />
+                <!-- Row 1: Switch -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="6dp">
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Go To (Ghar / Ilaaka)" android:textColor="#8B949E" android:textSize="12sp" />
-            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#21262D" android:textColor="#8B949E" android:hint="e.g. Connaught Place" android:padding="10dp" android:textSize="14sp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Bike / Auto / Cab / Parcel Switch"
+                        android:textColor="#C9D1D9"
+                        android:textSize="13sp" />
+
+                    <CheckBox
+                        android:id="@+id/switchService"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#1F6FEB"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#21262D" />
+
+                <!-- Row 2: Min Trip Doori -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Minimum Trip Doori (km)"
+                        android:textColor="#C9D1D9"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/inputMinTrip"
+                        android:layout_width="110dp"
+                        android:layout_height="38dp"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:text="5"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#21262D" />
+
+                <!-- Row 3: Max Pickup Doori -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Max Pickup Doori (0.5 - 12 km)"
+                        android:textColor="#C9D1D9"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/inputMaxPickup"
+                        android:layout_width="110dp"
+                        android:layout_height="38dp"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:text="2"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#21262D" />
+
+                <!-- Row 4: Minimum Kamai -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Minimum Kamai (₹ Fare)"
+                        android:textColor="#C9D1D9"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/inputMinFare"
+                        android:layout_width="110dp"
+                        android:layout_height="38dp"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:text="60"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#21262D" />
+
+                <!-- Row 5: Go To -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Go To (Ghar / Ilaaka)"
+                        android:textColor="#C9D1D9"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/inputGoTo"
+                        android:layout_width="180dp"
+                        android:layout_height="38dp"
+                        android:gravity="center"
+                        android:hint="e.g. Connaught Place"
+                        android:textColorHint="#6E7681"
+                        android:inputType="text"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Card 2: Direct GPay Pass & Rule Activation -->
+            <LinearLayout
+                android:id="@+id/cardActivation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2. Direct GPay Pass &amp; Rule Activation"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Driver Mobile Number (10 Digits):"
+                    android:textColor="#8B949E"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="6dp" />
+
+                <EditText
+                    android:id="@+id/inputPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:paddingHorizontal="12dp"
+                    android:text="9656896787"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Select Pass Plan:"
+                    android:textColor="#8B949E"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="6dp" />
+
+                <Spinner
+                    android:id="@+id/spinnerPlan"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:paddingHorizontal="8dp"
+                    android:layout_marginBottom="14dp" />
+
+                <Button
+                    android:id="@+id/btnPayGpay"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:backgroundTint="#1F6FEB"
+                    android:text="Tap to Pay ₹9 Directly on GPay / UPI App"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="14dp" />
+
+                <!-- QR Code Box -->
+                <LinearLayout
+                    android:id="@+id/qrContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:layout_marginBottom="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Or Scan QR from GPay / PhonePe / Paytm:"
+                        android:textColor="#8B949E"
+                        android:textSize="11sp"
+                        android:layout_marginBottom="10dp" />
+
+                    <ImageView
+                        android:id="@+id/imgQrCode"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:background="#FFFFFF"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter" />
+
+                    <TextView
+                        android:id="@+id/txtUpiId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="UPI ID: kkumar221@okhdfcbank"
+                        android:textColor="#58A6FF"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Safety Check — Enter 12-Digit UPI Ref / UTR No. from GPay:"
+                    android:textColor="#8B949E"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="6dp" />
+
+                <EditText
+                    android:id="@+id/inputUtr"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:hint="12-digit UTR number"
+                    android:textColorHint="#6E7681"
+                    android:inputType="number"
+                    android:maxLength="12"
+                    android:paddingHorizontal="12dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="14dp" />
+
+                <Button
+                    android:id="@+id/btnSaveRules"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:backgroundTint="#238636"
+                    android:text="Save Rules &amp; Submit for Verification"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp" />
+
+                <Button
+                    android:id="@+id/btnCheckStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:backgroundTint="#21262D"
+                    android:text="Check My Pass Status"
+                    android:textAllCaps="false"
+                    android:textColor="#58A6FF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtCloudStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:text="Checking cloud status..."
+                    android:textColor="#58A6FF"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- Card 2: Direct GPay Pass & Rule Activation -->
+        <!-- ================= ADMIN PANEL VIEW ================= -->
         <LinearLayout
+            android:id="@+id/adminPanelContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#161B22"
-            android:padding="16dp">
+            android:visibility="gone"
+            android:padding="6dp">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2. Direct GPay Pass &amp; Rule Activation"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
+                android:text="Smart Captain – Supabase Admin Panel"
+                android:textColor="#D29922"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Driver Mobile Number (10 Digits):" android:textColor="#8B949E" android:textSize="12sp" />
-            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#21262D" android:textColor="#FFFFFF" android:text="9656896787" android:padding="10dp" android:textSize="14sp" android:layout_marginBottom="10dp" />
-
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Select Pass Plan:" android:textColor="#8B949E" android:textSize="12sp" />
-            <Spinner
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#21262D"
-                android:padding="10dp"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="14dp"
+                android:text="Verify UTR numbers from your GPay app, then click approve below:"
+                android:textColor="#C9D1D9"
+                android:textSize="12sp" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/tableAdminRows"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#161B22"
+                    android:padding="2dp" />
+            </HorizontalScrollView>
 
             <Button
+                android:id="@+id/btnRefreshAdmin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tap to Pay ₹9 Directly on GPay / UPI App"
-                android:backgroundTint="#1F6FEB"
-                android:textColor="#FFFFFF"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Save Rules &amp; Submit for Verification"
-                android:backgroundTint="#238636"
-                android:textColor="#FFFFFF"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Check My Pass Status"
+                android:layout_height="44dp"
+                android:layout_marginTop="16dp"
                 android:backgroundTint="#21262D"
+                android:text="Refresh Payment Requests"
+                android:textAllCaps="false"
                 android:textColor="#58A6FF"
                 android:textSize="13sp" />
         </LinearLayout>
