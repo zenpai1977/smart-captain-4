@@ -34,12 +34,16 @@ class ChecksFragment : Fragment() {
         }
 
         btnMonitor.setOnClickListener {
-            prefs.edit().putBoolean("engine_active", false).apply()
+            val editor = prefs.edit()
+            editor.putBoolean("engine_active", false)
+            editor.apply()
             Toast.makeText(requireContext(), "Switched to Monitor Mode", Toast.LENGTH_SHORT).show()
         }
 
         btnActive.setOnClickListener {
-            prefs.edit().putBoolean("engine_active", true).apply()
+            val editor = prefs.edit()
+            editor.putBoolean("engine_active", true)
+            editor.apply()
             Toast.makeText(requireContext(), "Switched to Active Mode", Toast.LENGTH_SHORT).show()
         }
 
