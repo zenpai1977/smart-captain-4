@@ -5,7 +5,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
+        android:label="SmartCaptain"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCaptain">
 
@@ -21,7 +21,7 @@
         <service
             android:name=".AutoAcceptService"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="SmartCaptain"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
