@@ -30,8 +30,10 @@ class StatusFragment : Fragment() {
         txtDeclined.text = prefs.getInt("declined_count", 0).toString()
         switchEngine.isChecked = prefs.getBoolean("engine_active", false)
 
-        switchEngine.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean("engine_active", isChecked).apply()
+        switchEngine.setOnCheckedChangeListener { buttonView: android.widget.CompoundButton, isChecked: Boolean ->
+            val editor = prefs.edit()
+            editor.putBoolean("engine_active", isChecked)
+            editor.apply()
         }
 
         btnGrant.setOnClickListener {
