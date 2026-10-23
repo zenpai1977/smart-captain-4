@@ -34,10 +34,10 @@ class AccountFragment : Fragment() {
         btnSave.setOnClickListener {
             val mobile = editMobile.text.toString().trim()
             if (mobile.length == 10) {
-                val editor = prefs.edit()
-                editor.putString("mobile_number", mobile)
-                editor.putString("referral_code", editReferral.text.toString().trim())
-                editor.apply()
+                prefs.edit()
+                    .putString("mobile_number", mobile)
+                    .putString("referral_code", editReferral.text.toString().trim())
+                    .apply()
                 txtStatus.text = "Status: Registered (+91 $mobile)"
                 Toast.makeText(requireContext(), "Account Saved!", Toast.LENGTH_SHORT).show()
             } else {
