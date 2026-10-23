@@ -75,20 +75,20 @@ class AutoAcceptService : AccessibilityService() {
             val newEntry = "[$timeStamp] ACCEPTED (₹$detectedFare | ${pickupDist}km) - $reason"
             val updatedLog = if (oldLog.startsWith("No bookings")) newEntry else "$newEntry\n\n$oldLog"
 
-            val editor = prefs.edit()
-            editor.putInt("accepted_count", accepted)
-            editor.putString("activity_log", updatedLog)
-            editor.apply()
+            prefs.edit()
+                .putInt("accepted_count", accepted)
+                .putString("activity_log", updatedLog)
+                .apply()
         } else {
             val declined = prefs.getInt("declined_count", 0) + 1
             val oldLog = prefs.getString("activity_log", "") ?: ""
             val newEntry = "[$timeStamp] SKIPPED (₹$detectedFare | ${pickupDist}km) - $reason"
             val updatedLog = if (oldLog.startsWith("No bookings")) newEntry else "$newEntry\n\n$oldLog"
 
-            val editor = prefs.edit()
-            editor.putInt("declined_count", declined)
-            editor.putString("activity_log", updatedLog)
-            editor.apply()
+            prefs.edit()
+                .putInt("declined_count", declined)
+                .putString("activity_log", updatedLog)
+                .apply()
         }
     }
 
