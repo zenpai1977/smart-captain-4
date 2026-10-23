@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -31,10 +32,23 @@ class AccountFragment : Fragment() {
         val btnSubmitUtr = view.findViewById<Button>(R.id.btnSubmitUtr)
         val txtPassStatus = view.findViewById<TextView>(R.id.txtPassStatus)
 
-        // Populate Pass Plans Spinner
+        // Pass plans and their corresponding prices
         val plans = arrayOf("1 Day Pass — ₹9 (Unlimited Rides)", "7 Days Pass — ₹49", "30 Days Pass — ₹149")
+        val prices = arrayOf("9.00", "49.00", "149.00")
+        
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, plans)
         spinnerPassPlan.adapter = adapter
+
+        var selectedAmount = "9.00"
+        spinnerPassPlan.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedAmount = prices[position]
+                val planName = plans[position]
+                val priceText = planName.substringAfter("— ").substringBefore(" ")
+                btnOpenUpi.text = "Tap to Pay $priceText via GPay / PhonePe"
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         // Load saved mobile if available
         val savedMobile = prefs.getString("mobile_number", "") ?: ""
@@ -45,12 +59,11 @@ class AccountFragment : Fragment() {
         val passStatus = prefs.getString("pass_status", "No active pass found. Submit UTR to activate.")
         txtPassStatus.text = passStatus
 
-        // Launch UPI Payment App using your exact UPI ID
+        // Launch UPI Payment App with the dynamic amount
         btnOpenUpi.setOnClickListener {
             val upiId = "kkumae221@okhdfcbank"
             val name = "SmartCaptain"
-            val amount = "9.00"
-            val uri = Uri.parse("upi://pay?pa=$upiId&pn=$name&am=$amount&cu=INR")
+            val uri = Uri.parse("upi://pay?pa=$upiId&pn=$name&am=$selectedAmount&cu=INR")
             
             val intent = Intent(Intent.ACTION_VIEW, uri)
             try {
