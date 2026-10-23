@@ -55,6 +55,18 @@
             android:background="#1E1E1E"
             android:layout_marginBottom="16dp" />
 
+        <!-- UPI Payment Button -->
+        <Button
+            android:id="@+id/btnOpenUpi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#1976D2"
+            android:text="Tap to Pay ₹9 via GPay / PhonePe"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
