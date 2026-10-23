@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="#121212"
     android:padding="16dp">
 
     <LinearLayout
@@ -13,87 +13,89 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Account"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
+            android:text="Account &amp; Subscription"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:layout_marginBottom="16dp" />
 
-        <LinearLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Driver Mobile Number (10 Digits):"
+            android:textColor="#AAAAAA"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/editMobileNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#161616"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:background="#1E1E1E"
+            android:hint="9876543210"
+            android:inputType="phone"
+            android:maxLength="10"
+            android:padding="12dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#555555"
+            android:layout_marginBottom="16dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Get started"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Pass Plan:"
+            android:textColor="#AAAAAA"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mobile number"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+        <Spinner
+            android:id="@+id/spinnerPassPlan"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#1E1E1E"
+            android:layout_marginBottom="16dp" />
 
-            <EditText
-                android:id="@+id/editMobileNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="#222222"
-                android:hint="+91 10 digit mobile number"
-                android:inputType="phone"
-                android:maxLength="10"
-                android:padding="14dp"
-                android:textColor="@android:color/white"
-                android:textColorHint="#777777" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Safety Check — Enter 12-Digit UPI Ref / UTR No. from GPay:"
+            android:textColor="#AAAAAA"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Referral code (optional)"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+        <EditText
+            android:id="@+id/editUtrNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#1E1E1E"
+            android:hint="12-digit UTR number"
+            android:inputType="number"
+            android:maxLength="12"
+            android:padding="12dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#555555"
+            android:layout_marginBottom="16dp" />
 
-            <EditText
-                android:id="@+id/editReferralCode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="#222222"
-                android:hint="Referral code"
-                android:padding="14dp"
-                android:textColor="@android:color/white"
-                android:textColorHint="#777777" />
+        <Button
+            android:id="@+id/btnSubmitUtr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2E7D32"
+            android:text="Submit UTR for Activation"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
 
-            <Button
-                android:id="@+id/btnSaveAccount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="#5C9DFF"
-                android:padding="14dp"
-                android:text="Continue"
-                android:textColor="@android:color/black"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/txtPassStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No active pass found. Submit UTR to activate."
+            android:textColor="#AAAAAA"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:padding="8dp" />
 
-            <TextView
-                android:id="@+id/txtAccountStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Status: Not registered"
-                android:textColor="#888888"
-                android:textSize="14sp" />
-
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>
