@@ -2,7 +2,7 @@ name: Build Android APK
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
@@ -13,30 +13,44 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: "17"
+          distribution: 'temurin'
+          java-version: '17'
 
-      - name: Setup Gradle
+      - name: Setup Gradle 8.7
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7'
 
-      - name: Build Debug APK
+      - name: Auto-clean duplicate folders & build APK
         run: |
           mkdir -p app/src/main/res/drawable
-          
+          mkdir -p app/src/main/java/com/smartcaptain/app
+
           # Copy uploaded logo if present
           if [ -f "Neon Captain Driver Icon.png" ]; then
             cp "Neon Captain Driver Icon.png" app/src/main/res/drawable/app_logo.png
           fi
 
-          # Build using gradle directly via root project files
+          # Move any Kotlin files from old com/example/smartcaptain folder if missing in com/smartcaptain/app
+          if [ -d "app/src/main/java/com/example/smartcaptain" ]; then
+            cp -n app/src/main/java/com/example/smartcaptain/*.kt app/src/main/java/com/smartcaptain/app/ || true
+            rm -rf app/src/main/java/com/example
+          fi
+
+          # Force all Kotlin files to use package com.smartcaptain.app
+          sed -i 's/^package .*/package com.smartcaptain.app/' app/src/main/java/com/smartcaptain/app/*.kt
+
+          # Force app/build.gradle.kts to use namespace com.smartcaptain.app
+          sed -i 's/namespace = .*/namespace = "com.smartcaptain.app"/' app/build.gradle.kts
+
+          # Build Debug APK
           gradle assembleDebug --no-daemon
 
-      - name: Upload APK Artifact
-        if: success()
+      - name: Upload Compiled APK
         uses: actions/upload-artifact@v4
         with:
-          name: smart-captain-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: SmartCaptain-Debug-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
