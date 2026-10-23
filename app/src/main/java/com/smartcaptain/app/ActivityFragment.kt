@@ -25,9 +25,7 @@ class ActivityFragment : Fragment() {
         txtLog.text = prefs.getString("activity_log", defaultText)
 
         btnClear.setOnClickListener {
-            val editor = prefs.edit()
-            editor.remove("activity_log")
-            editor.apply()
+            prefs.edit().remove("activity_log").apply()
             txtLog.text = defaultText
         }
 
