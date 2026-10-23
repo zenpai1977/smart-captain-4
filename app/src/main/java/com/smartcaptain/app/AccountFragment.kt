@@ -1,6 +1,8 @@
 package com.example.smartcaptain
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,7 @@ class AccountFragment : Fragment() {
 
         val editMobile = view.findViewById<EditText>(R.id.editMobileNumber)
         val spinnerPassPlan = view.findViewById<Spinner>(R.id.spinnerPassPlan)
+        val btnOpenUpi = view.findViewById<Button>(R.id.btnOpenUpi)
         val editUtr = view.findViewById<EditText>(R.id.editUtrNumber)
         val btnSubmitUtr = view.findViewById<Button>(R.id.btnSubmitUtr)
         val txtPassStatus = view.findViewById<TextView>(R.id.txtPassStatus)
@@ -41,6 +44,21 @@ class AccountFragment : Fragment() {
 
         val passStatus = prefs.getString("pass_status", "No active pass found. Submit UTR to activate.")
         txtPassStatus.text = passStatus
+
+        // Launch UPI Payment App using your exact UPI ID
+        btnOpenUpi.setOnClickListener {
+            val upiId = "kkumae221@okhdfcbank"
+            val name = "SmartCaptain"
+            val amount = "9.00"
+            val uri = Uri.parse("upi://pay?pa=$upiId&pn=$name&am=$amount&cu=INR")
+            
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "No UPI app found on device", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         btnSubmitUtr.setOnClickListener {
             val mobile = editMobile.text.toString().trim()
